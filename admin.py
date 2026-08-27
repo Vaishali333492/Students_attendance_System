@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import ClassRoom, AttendanceSession, AttendanceRecord
+from .models import User
 
-admin.site.register(ClassRoom)
-admin.site.register(AttendanceSession)
-admin.site.register(AttendanceRecord)
+
+admin.site.register(User)
