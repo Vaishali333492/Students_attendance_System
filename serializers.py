@@ -1,30 +1,18 @@
 from rest_framework import serializers
-from .models import User
+
+from .models import ClassRoom, AttendanceSession
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class ClassRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassRoom
+        fields = ('id', 'name', 'code', 'description')
 
-    password = serializers.CharField(write_only=True)
+
+class AttendanceSessionSerializer(serializers.ModelSerializer):
+    classroom = ClassRoomSerializer(read_only=True)
+    teacher = serializers.CharField(source='created_by.user.username', read_only=True)
 
     class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'phone',
-            'role',
-            'password',
-        )
-
-    def create(self, validated_data):
-
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            phone=validated_data.get('phone'),
-            role=validated_data['role'],
-            password=validated_data['password']
-        )
-
-        return user
+        model = AttendanceSession
+        fields = ('token', 'classroom', 'teacher', 'start_time', 'expires_at', 'active')
